@@ -16,6 +16,18 @@ void setup() {
   // put your setup code here, to run once:
   lcd.begin(16,2);
   lcd.print("Initializing");
+    if (!accel.begin()) {
+      lcd.clear();
+      lcd.print("Error initializing accelerometer");
+      while (1); // Loop if accelerometer initialization fails
+    }else {
+      lcd.print("Accelerometer initialized successfully!");
+      // set custom params if necessary
+      accel.setRange(ADXL345_RANGE_16_G); // Sets range to 16G
+      accel.setDataRate(ADXL345_DATARATE_100_HZ); // Sets data rate to 100Hz
+    }
+  }
+
 }
 void loop() {
     // display enter input
@@ -33,12 +45,32 @@ void loop() {
 
 void ADXLdata() {
   // fungsi untuk mendapat data akselerometer
+    sensors_event_t event;
+  accel.getEvent(&event);
+
+  float accelerationX = event.acceleration.x;
+  float accelerationY = event.acceleration.y;
+  float accelerationZ = event.acceleration.z;
+
+  float roll = atan2(accelerationY, accelerationZ) * 180.0 / PI;
+  float pitch = atan2(-accelerationX, sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 180.0 / PI;
+
+  lcd.clear();
+  // lcd.setCursor(0, 0);
+  // lcd.print("Roll: ");
+  // lcd.print(roll);
+  // lcd.print(" degrees");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Pitch: ");
+  lcd.print(pitch);
+  lcd.print(" degrees");
 }
 
 void d1d2Calc() {
   // menghitung d1, dan d2 dari data akselerometer,
   dan panjang antara tuas dan pivot
-  int d1 = lengthPivotTuas*sin();
+  int d1 = lengthPivotTuas*sin(pitch);
   int d2 = d1;
   return d1
   return d2 
