@@ -11,8 +11,8 @@ const int interruptPin = 2; // Pin to trigger the interrupt
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345); // alamat I2C integrated circuit communication
 
 // LCD pins
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-const int LiquidCrystal[] = {12,11,5,4,3,2};
+// LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+// const int LiquidCrystal[LC] = {12,11,5,4,3,2};
 const int lengthPivotTuas = lengthPivotTuas;
 const int buttons = 1; // number of buttons
 const int buttonPins[buttons] = {2}; // Change pin numbers as per your connections
@@ -31,7 +31,6 @@ void setup() {
     if (!accel.begin()) {
       lcd.clear();
       lcd.print("Error initializing accelerometer");
-      while (1); // Loop if accelerometer initialization fails
     }else {
       lcd.print("Accelerometer initialized successfully!");
       // set custom params if necessary
@@ -39,13 +38,11 @@ void setup() {
       accel.setDataRate(ADXL345_DATARATE_100_HZ); // Sets data rate to 100Hz
     }
   }
-
-}
-  void autosleepproto() {
+  void autosleep() {
     set_sleep_mode(SLEEP_MODE_PWR_DOWN); // Choose the desired sleep mode
     sleep_enable();
     sleep_mode();
-    stopActions();
+    stopActions(); //fungsi-fungsi sudah ada di library
   }
   void wakeUp() {
     // This function is called when the interrupt pin triggers the interrupt
@@ -56,21 +53,32 @@ void setup() {
 
   void loop() {
     // display enter input
-      lcd.print("Calibrate Sensor?")
-      while {
-        if (digitalRead(,))
+     while (buttonPins[2], LOW) {
+        if (digitalRead(buttonPins[2]), HIGH){
+          lcd.print("waking up");
+          wakeUp();
+        }else{
+          lcd.print("going into sleep mode, press button to restart.");
+          delay(5000);
+          autosleep();
+          if (digitalRead(buttonPins[2]), HIGH) {
+            lcd.print("waking up")
+            wakeUp();
+          }
+        }
       }
+    }
+    buttons = 1;
       for (int i = 0; i < buttons; i++) {
       int buttonState = digitalRead(buttonPins[i]);
       lastButtonPressTime = millis();
-       if(buttonState == HIGH){
-          lcd.print("waking up")
-          wakeUp();
-       }else{
-          delay(500);
-          lcd.print("sleep mode, press button to restart.")
-          autosleepproto();
-
+      lcd.print("Press Button Calibrate Sensor")
+      while(digitalRead(buttonPins[2]), LOW){
+      if (digitalRead(buttonPins[2]), HIGH){
+          calibrateADXL345();
+      }
+    }
+  }
   delay(500);
   lcd.print("Input jarak pivot pada ujung tuas berbeban"); 
     // masih memikir cara membuat sistem input data length	
@@ -80,15 +88,14 @@ void setup() {
     // eksekusi kalkulasi dan memunculkan hasil
   d1d2Calc();
     // hitung d1 dan d2
-  lcd.print("Jarak antar benda dan tuas: "+d1+" dan panjang
-  pegas adalah: "+d2+”);
+  lcd.print("Jarak antar benda dan tuas: " + String(d1) + "cm dan panjang pegas adalah: " + String(d2) + "cm");
   //  hasil
 }
 
 void ADXLdata() {
   // fungsi untuk mendapat data akselerometer
-    sensors_event_t event;
-  accel.getEvent(&event);
+    sensors_event_t event; //library
+  accel.getEvent(&event); //library
 
   float accelerationX = event.acceleration.x;
   float accelerationY = event.acceleration.y;
@@ -97,7 +104,7 @@ void ADXLdata() {
   float roll = atan2(accelerationY, accelerationZ) * 180.0 / PI;
   float pitch = atan2(-accelerationX, sqrt(accelerationY*accelerationY+accelerationZ*accelerationZ)) * 180.0 / PI;
 
-  lcd.clear();
+  lcd.clear(); //library
   // lcd.setCursor(0, 0);
   // lcd.print("Roll: ");
   // lcd.print(roll);
@@ -147,6 +154,9 @@ void calibrateADXL345() {
   // Apply offsets to the accelerometer (optional)
   accel.setOffsets(x_offset, y_offset, z_offset);
 }
+
+
+
 
 
 // #include <Adafruit_LiquidCrystal.h>
