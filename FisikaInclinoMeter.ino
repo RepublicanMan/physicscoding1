@@ -1,11 +1,14 @@
-#include <Adafruit_LiquidCrystal.h>
-#include <cmath>
-#include <iostream>
+// #include <Adafruit_LiquidCrystal.h>
+#include <math.h>
+// #include <iostream> // C++ standard library used for input/output streams. However, it's not typically used in Arduino sketches.
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_ADXL345_U.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
+#include <Adafruit_GFX.h>    // graphics library
+#include <Adafruit_ILI9341.h>
+#include <UTFT.H>
 
 const int interruptPin = 2; // Pin to trigger the interrupt
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345); // alamat I2C integrated circuit communication
