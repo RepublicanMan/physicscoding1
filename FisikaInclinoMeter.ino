@@ -39,10 +39,11 @@ Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 // LCD pins
 // LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 // const int LiquidCrystal[LC] = {12,11,5,4,3,2};
-const int lengthPivotTuas = 0;
+
 const int buttons = 2;                  // number of buttons
 const int buttonPins[buttons] = { 2 };  // Change pin numbers as per your connections
 const int buttonTimeout = 5000;         // Time in milliseconds before automatic shutdown
+int lengthPivotTuas = 0;
 int AcceleroMeterValue;
 int d1;
 int d2;
