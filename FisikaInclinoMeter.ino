@@ -39,15 +39,14 @@ Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 // LCD pins
 // LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 // const int LiquidCrystal[LC] = {12,11,5,4,3,2};
-
 const int buttons = 2;                  // number of buttons
 const int buttonPins[buttons] = { 2 };  // Change pin numbers as per your connections
 const int buttonTimeout = 5000;         // Time in milliseconds before automatic shutdown
-int lengthPivotTuas = 0;
+int lengthPivotTuas;
 int AcceleroMeterValue;
 int d1;
 int d2;
-
+int pitch;
 
 void setup() {
   // put your setup code here, to run once:
@@ -67,7 +66,7 @@ void setup() {
   }
 }
 void loop() {
-  // Display "enter input"
+  //put code to run here
   while (buttonPins[2], LOW) {
     if (digitalRead(buttonPins[2]) == HIGH) {
       // tft.fillScreen(ILI9341_BLACK);  // Fill the screen with black color
@@ -106,7 +105,8 @@ void loop() {
 
   delay(500);
   tft.println("Input jarak pivot pada ujung tuas berbeban");
-  // masih memikir cara membuat sistem input data length
+  Serial.println("Input jarak pivot pada ujung tuas berbeban");
+  int lengthPivotTuas = Serial.parseInt();
   lengthPivotTuas = 0;  //Input jarak
 
   // mendapatkan data accelerometer
@@ -116,7 +116,7 @@ void loop() {
   d1d2Calc();
 
   // hitung d1 dan d2
-  tft.println("Jarak antar benda dan tuas: " + String(d1) + "cm dan panjang pegas adalah: " + String(d2) + "cm");
+  tft.println("Jarak antar benda dan tuas: " + string(d1) + " cm dan panjang pegas adalah: " + string(d2) + " cm");
   //  hasil
 }
 
@@ -142,6 +142,12 @@ void loop() {
         float accelerationY = event.acceleration.y;
         float accelerationZ = event.acceleration.z;
 
+        tft.print("X: "); tft.print(event.acceleration.x); tft.print("  ");
+        tft.print("Y: "); tft.print(event.acceleration.y); tft.print("  ");
+        tft.print("Z: "); tft.print(event.acceleration.z); tft.print("  ");
+        tft.println("m/s^2 ");
+        delay(1500);
+
         float roll = atan2(accelerationY, accelerationZ) * 180.0 / PI;
         float pitch = atan2(-accelerationX, sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 180.0 / PI;
 
@@ -161,7 +167,8 @@ void loop() {
         // Calculate d1 and d2 from accelerometer data and the length between lever and pivot 
         int d1 = lengthPivotTuas * sin(pitch);
         int d2 = d1;
-        return d1 return d2;
+        return d1;
+        return d2;
       }
 
       void calibrateADXL345() {
@@ -194,7 +201,7 @@ void loop() {
         Serial.println(z_offset);
 
         // Apply offsets to the accelerometer (optional)
-        accel.setOffsets(x_offset, y_offset, z_offset);
+        // accel.setOffsets(x_offset, y_offset, z_offset);
         }
 
 
