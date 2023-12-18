@@ -57,7 +57,7 @@ void setup() {
   Serial.println(F("TFT LCD Initializing"));
   if (!accel.begin()) {
     // tft.fillScreen(ILI9341_BLACK);  // Clear to black
-    tft.print("Error initializing accelerometer");
+    tft.print("Error initializing accelerometer");  
     }else{
     tft.print("Accelerometer initialized successfully!");
     // set custom params if necessary
@@ -110,12 +110,13 @@ void loop() {
   while (Serial.available() == 0){
   }
   int lengthPivotTuas = Serial.parseInt();
-  switch (lengthPivotTuas) {
-    case 1:
-    //m length
-    Serial.print("Panjang antara titik tumpu, dan tuas berbeban adalah: ");
-    Serial.println(lengthPivotTuas);
-  }
+  // switch (lengthPivotTuas) {
+  //   case 1:
+  //   //m length
+  //   Serial.print("Panjang antara titik tumpu, dan tuas berbeban adalah: ");
+  //   Serial.println(lengthPivotTuas);
+  //   break;
+  // }
   tft.println("Panjang antara titik tumpu, dan tuas berbeban adalah: ___ m");
   // mendapatkan data accelerometer
 
