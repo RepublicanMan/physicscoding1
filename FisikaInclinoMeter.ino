@@ -10,7 +10,7 @@
 // #include <Adafruit_ILI9341.h>
 #include <Adafruit_TFTLCD.h>
 #include <SPI.h>
-#include <TFT.h>
+// #include <TFT.h>
 #include <Adafruit_ST7735.h>  
 // The TFT library relies on the SPI library for communication with the screen and SD card, and needs to be included in all sketches.
 // #include <UTFT.h>
@@ -46,6 +46,7 @@ int AcceleroMeterValue;
 int d1;
 int d2;
 int pitch;
+int roll;
 
 void setup() {
   // put your setup code here, to run once:
@@ -104,13 +105,20 @@ void loop() {
     }
 
   delay(500);
-  tft.println("Input jarak pivot kepada ujung tuas berbeban di monitor serial");
-  Serial.println("Input jarak pivot kepada ujung tuas berbeban: __ cm");
+  tft.println("Input jarak pivot dalam meter kepada ujung tuas berbeban di monitor serial");
+  Serial.println("Input jarak pivot kepada ujung tuas berbeban: ___");
   while (Serial.available() == 0){
   }
   int lengthPivotTuas = Serial.parseInt();
-  tft.println("Panjang antara titik tumpu, dan tuas berbeban adalah: ___ cm");
+  switch (lengthPivotTuas) {
+    case 1:
+    //m length
+    Serial.print("Panjang antara titik tumpu, dan tuas berbeban adalah: ");
+    Serial.println(lengthPivotTuas);
+  }
+  tft.println("Panjang antara titik tumpu, dan tuas berbeban adalah: ___ m");
   // mendapatkan data accelerometer
+
   ADXLdata();
 
   // eksekusi kalkulasi dan memunculkan hasil
@@ -121,6 +129,13 @@ void loop() {
   //  hasil
 }
 
+      void d1d2Calc() {
+              // Calculate d1 and d2 from accelerometer data and the length between lever and pivot 
+              int d1 = lengthPivotTuas * sin(pitch);
+              int d2 = d1;
+              return d1;
+              return d2;
+            }
 
       void autosleep() {
         set_sleep_mode(SLEEP_MODE_PWR_DOWN);  // Choose the desired sleep mode
@@ -162,14 +177,6 @@ void loop() {
         tft.println("Pitch: "); //ln or no ln since ln gives new line, dilemna
         tft.println(pitch);
         tft.println(" degrees");
-      }
-
-      void d1d2Calc() {
-        // Calculate d1 and d2 from accelerometer data and the length between lever and pivot 
-        int d1 = lengthPivotTuas * sin(pitch);
-        int d2 = d1;
-        return d1;
-        return d2;
       }
 
       void calibrateADXL345() {
