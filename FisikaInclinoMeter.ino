@@ -21,7 +21,6 @@
 #define LCD_CD A2  // Command/Data goes to Analog 2
 #define LCD_WR A1  // LCD Write goes to Analog 1
 #define LCD_RD A0  // LCD Read goes to Analog 0
-
 #define LCD_RESET A4  // Can alternately just connect to Arduino's reset pin
 #define LCD_RESET A2  // sample pin
 
@@ -97,6 +96,7 @@ void loop() {
     // lastButtonPressTime = millis();
   }
     tft.println("Press Button 2 to Calibrate Sensor");
+    delay(1000);
     while (digitalRead(buttonPins[2]), LOW) {
       if (digitalRead(buttonPins[2]), HIGH) {
         calibrateADXL345();
@@ -104,11 +104,12 @@ void loop() {
     }
 
   delay(500);
-  tft.println("Input jarak pivot pada ujung tuas berbeban");
-  Serial.println("Input jarak pivot pada ujung tuas berbeban");
+  tft.println("Input jarak pivot kepada ujung tuas berbeban di monitor serial");
+  Serial.println("Input jarak pivot kepada ujung tuas berbeban: __ cm");
+  while (Serial.available() == 0){
+  }
   int lengthPivotTuas = Serial.parseInt();
-  lengthPivotTuas = 0;  //Input jarak
-
+  tft.println("Panjang antara titik tumpu, dan tuas berbeban adalah: ___ cm");
   // mendapatkan data accelerometer
   ADXLdata();
 
@@ -116,7 +117,7 @@ void loop() {
   d1d2Calc();
 
   // hitung d1 dan d2
-  tft.println("Jarak antar benda dan tuas: " + string(d1) + " cm dan panjang pegas adalah: " + string(d2) + " cm");
+  tft.println("Jarak antar benda dan tuas: " + String(d1) + "cm dan panjang pegas adalah: " + String(d2) + "cm");
   //  hasil
 }
 
@@ -148,8 +149,8 @@ void loop() {
         tft.println("m/s^2 ");
         delay(1500);
 
-        float roll = atan2(accelerationY, accelerationZ) * 180.0 / PI;
-        float pitch = atan2(-accelerationX, sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 180.0 / PI;
+        float roll = atan2(accelerationY, accelerationZ) * 180.0 / PI; //roll in degrees
+        float pitch = atan2(-accelerationX, sqrt(accelerationY * accelerationY + accelerationZ * accelerationZ)) * 180.0 / PI; //pitch in degrees
 
         // tft.clear(ST7735_BLACK);
         // lcd.setCursor(0, 0);
